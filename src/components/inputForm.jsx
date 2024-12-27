@@ -148,6 +148,7 @@ const Getdata = () => {
                 <option value="ห้องน้ำ">ห้องน้ำ</option>
                 <option value="ATM">ATM</option>
                 <option value="ลานจอดรถ">ลานจอดรถ</option>
+                <option value="อาหารและเครื่องดื่ม">อาหารและเครื่องดื่ม</option>
               </select>
             </th>
             <th scope="col">
@@ -241,6 +242,7 @@ const Getdata = () => {
                     <option value="ห้องน้ำ">ห้องน้ำ</option>
                     <option value="ATM">ATM</option>
                     <option value="ลานจอดรถ">ลานจอดรถ</option>
+                    <option value="อาหารและเครื่องดื่ม">อาหารและเครื่องดื่ม</option>
                   </select>
                 ) : (
                   item.type
