@@ -1,12 +1,14 @@
 import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase/firebase';
+
 const Getdata = () => {
   const [form, setForm] = useState({});
   const [data, setData] = useState([]);
   const [editId, setEditId] = useState(null);
 
   const roitaiRef = collection(db, "rmuttlocations");
+
   useEffect(() => {
     const unsubscribe = loadRealtime();
     return () => {
@@ -28,21 +30,27 @@ const Getdata = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.name, e.target.value);
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
   };
 
   const handleAddData = async () => {
-    form.latitude = parseFloat(form.latitude);
-    form.longitude = parseFloat(form.longitude);
-  
-    await addDoc(roitaiRef, form)
-      .then((res) => {})
+    const formData = {
+      ...form,
+      latitude: parseFloat(form.latitude) || 0,
+      longitude: parseFloat(form.longitude) || 0,
+    };
+
+    await addDoc(roitaiRef, formData)
+      .then(() => {
+        setForm({});
+      })
       .catch((err) => console.log(err));
   };
+
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(roitaiRef, id));
@@ -51,23 +59,38 @@ const Getdata = () => {
     }
   };
 
+  const handleEdit = (item) => {
+    setEditId(item.id);
+    setForm({
+      namelocation: item.namelocation || '',
+      latitude: item.latitude?.toString() || '',
+      longitude: item.longitude?.toString() || '',
+      detail: item.detail || '',
+      type: item.type || '',
+    });
+  };
+
   const handleSave = async (id) => {
-    form.latitude = parseFloat(form.latitude);
-    form.longitude = parseFloat(form.longitude);
-  
+    const formData = {
+      ...form,
+      latitude: parseFloat(form.latitude) || 0,
+      longitude: parseFloat(form.longitude) || 0,
+    };
+
     try {
-      await updateDoc(doc(roitaiRef, id), form);
+      await updateDoc(doc(roitaiRef, id), formData);
       setEditId(null);
+      setForm({});
     } catch (err) {
       console.log(err);
     }
   };
+
   const handleCancel = () => {
     setEditId(null);
     setForm({});
   };
 
-  console.log(editId);
   return (
     <div className="container">
       <table className="table table-hover">
@@ -77,38 +100,55 @@ const Getdata = () => {
             <th scope="col">
               <input
                 className="form-control"
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
                 type="text"
                 name="namelocation"
                 placeholder="namelocation"
+                value={form.namelocation || ''}
               />
             </th>
             <th scope="col">
               <input
                 className="form-control"
-                onChange={(e) => handleChange(e)}
-                type="text"
+                onChange={handleChange}
+                type="number"
                 name="latitude"
                 placeholder="latitude"
+                value={form.latitude || ''}
               />
             </th>
             <th scope="col">
               <input
                 className="form-control"
-                onChange={(e) => handleChange(e)}
-                type="text"
+                onChange={handleChange}
+                type="number"
                 name="longitude"
                 placeholder="longitude"
+                value={form.longitude || ''}
               />
             </th>
             <th scope="col">
               <input
                 className="form-control"
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
                 type="text"
                 name="detail"
                 placeholder="detail"
+                value={form.detail || ''}
               />
+            </th>
+            <th scope="col">
+              <select
+                className="form-control"
+                onChange={handleChange}
+                name="type"
+                value={form.type || ''}
+              >
+                <option value="">Select Type</option>
+                <option value="ห้องน้ำ">ห้องน้ำ</option>
+                <option value="ATM">ATM</option>
+                <option value="ลานจอดรถ">ลานจอดรถ</option>
+              </select>
             </th>
             <th scope="col">
               <button className="btn btn-primary" onClick={handleAddData}>
@@ -117,6 +157,7 @@ const Getdata = () => {
             </th>
           </tr>
         </thead>
+
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -124,6 +165,7 @@ const Getdata = () => {
             <th scope="col">Latitude</th>
             <th scope="col">Longitude</th>
             <th scope="col">Detail</th>
+            <th scope="col">Type</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -131,81 +173,79 @@ const Getdata = () => {
           {data.map((item, index) => (
             <tr key={index}>
               <th scope="row">{index + 1}</th>
-
               <td>
                 {editId === item.id ? (
-                  <>
-                    <input
-                      className="form-control"
-                      onChange={(e) => handleChange(e)}
-                      type="text"
-                      name="namelocation"
-                      value={form.namelocation !== undefined ? form.namelocation : item.namelocation}
-                      placeholder="namelocation"
-                    />
-                  </>
+                  <input
+                    className="form-control"
+                    onChange={handleChange}
+                    type="text"
+                    name="namelocation"
+                    value={form.namelocation || ''}
+                    placeholder="namelocation"
+                  />
                 ) : (
                   item.namelocation
                 )}
               </td>
-
               <td>
                 {editId === item.id ? (
-                  <>
-                    <input
-                      className="form-control"
-                      onChange={(e) => handleChange(e)}
-                      type="text"
-                      name="latitude"
-                      value={
-                        form.latitude !== undefined ? form.latitude : item.latitude
-                      }
-                      placeholder="latitude"
-                    />
-                  </>
+                  <input
+                    className="form-control"
+                    onChange={handleChange}
+                    type="number"
+                    name="latitude"
+                    value={form.latitude || ''}
+                    placeholder="latitude"
+                  />
                 ) : (
                   item.latitude
                 )}
               </td>
-
               <td>
                 {editId === item.id ? (
-                  <>
-                    <input
-                      className="form-control"
-                      onChange={(e) => handleChange(e)}
-                      type="text"
-                      name="longitude"
-                      value={
-                        form.longitude !== undefined ? form.longitude : item.longitude
-                      }
-                      placeholder="longitude"
-                    />
-                  </>
+                  <input
+                    className="form-control"
+                    onChange={handleChange}
+                    type="number"
+                    name="longitude"
+                    value={form.longitude || ''}
+                    placeholder="longitude"
+                  />
                 ) : (
                   item.longitude
                 )}
               </td>
-
               <td>
                 {editId === item.id ? (
-                  <>
-                    <input
-                      className="form-control"
-                      onChange={(e) => handleChange(e)}
-                      type="text"
-                      name="detail"
-                      value={
-                        form.detail !== undefined ? form.detail : item.detail
-                      }
-                      placeholder="detail"
-                    />
-                  </>
+                  <input
+                    className="form-control"
+                    onChange={handleChange}
+                    type="text"
+                    name="detail"
+                    value={form.detail || ''}
+                    placeholder="detail"
+                  />
                 ) : (
                   item.detail
                 )}
               </td>
-
+              <td>
+                {editId === item.id ? (
+                  <select
+                    className="form-control"
+                    onChange={handleChange}
+                    name="type"
+                    value={form.type || ''}
+                  >
+                    <option value="">Select Type</option>
+                    <option value="ห้องน้ำ">ห้องน้ำ</option>
+                    <option value="ATM">ATM</option>
+                    <option value="ลานจอดรถ">ลานจอดรถ</option>
+                  </select>
+                ) : (
+                  item.type
+                )}
+              </td>
               <td>
                 {editId === item.id ? (
                   <>
@@ -217,7 +257,7 @@ const Getdata = () => {
                     </button>
                     <button
                       className="btn btn-secondary"
-                      onClick={() => handleCancel()}
+                      onClick={handleCancel}
                     >
                       Cancel
                     </button>
@@ -226,7 +266,7 @@ const Getdata = () => {
                   <>
                     <button
                       className="btn btn-warning"
-                      onClick={() => setEditId(item.id)}
+                      onClick={() => handleEdit(item)}
                     >
                       Edit
                     </button>
@@ -246,4 +286,5 @@ const Getdata = () => {
     </div>
   );
 };
+
 export default Getdata;
