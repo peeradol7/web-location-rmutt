@@ -146,9 +146,15 @@ const Getdata = () => {
               >
                 <option value="">Select Type</option>
                 <option value="ห้องน้ำ">ห้องน้ำ</option>
+                <option value="ห้องเรียน">ห้องเรียน</option>
                 <option value="ATM">ATM</option>
                 <option value="ลานจอดรถ">ลานจอดรถ</option>
-                <option value="อาหารและเครื่องดื่ม">อาหารและเครื่องดื่ม</option>
+                <option value="จุดขายอาหารและเครื่องดื่ม">จุดขายอาหารและเครื่องดื่ม</option>
+                <option value="จุดบริการของมหาลัย">จุดบริการของมหาลัย</option>
+                <option value="ห้องสมุด">ห้องสมุด</option>
+                <option value="โรงอาหาร">โรงอาหาร</option>
+                <option value="สนามกีฬา">สนามกีฬา</option>
+                <option value="ลานจอดรถ">ลานจอดรถ</option>
               </select>
             </th>
             <th scope="col">
@@ -240,9 +246,15 @@ const Getdata = () => {
                   >
                     <option value="">Select Type</option>
                     <option value="ห้องน้ำ">ห้องน้ำ</option>
+                    <option value="ห้องเรียน">ห้องเรียน</option>
                     <option value="ATM">ATM</option>
                     <option value="ลานจอดรถ">ลานจอดรถ</option>
-                    <option value="อาหารและเครื่องดื่ม">อาหารและเครื่องดื่ม</option>
+                    <option value="จุดขายอาหารและเครื่องดื่ม">จุดขายอาหารและเครื่องดื่ม</option>
+                    <option value="จุดบริการของมหาลัย">จุดบริการของมหาลัย</option>
+                    <option value="ห้องสมุด">ห้องสมุด</option>
+                    <option value="โรงอาหาร">โรงอาหาร</option>
+                    <option value="สนามกีฬา">สนามกีฬา</option>
+                    <option value="ลานจอดรถ">ลานจอดรถ</option>
                   </select>
                 ) : (
                   item.type
