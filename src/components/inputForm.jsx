@@ -43,12 +43,10 @@ const Getdata = () => {
       latitude: parseFloat(form.latitude) || 0,
       longitude: parseFloat(form.longitude) || 0,
     };
-
+  
     await addDoc(roitaiRef, formData)
-      .then(() => {
-        setForm({});
-      })
       .catch((err) => console.log(err));
+    // Removed setForm({}) so input fields retain their values
   };
 
   const handleDelete = async (id) => {
