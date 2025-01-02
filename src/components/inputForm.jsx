@@ -46,7 +46,6 @@ const Getdata = () => {
   
     await addDoc(roitaiRef, formData)
       .catch((err) => console.log(err));
-    // Removed setForm({}) so input fields retain their values
   };
 
   const handleDelete = async (id) => {
